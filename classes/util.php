@@ -598,6 +598,7 @@ class util {
         $a->name = fullname($user);
         $a->timeinactive = static::format_timespan(config::get('smartdetect_suspendafter'));
         $a->contact = $from->email;
+        $a->username = $user->username;
         $a->signature = fullname($from);
         $subject = get_string_manager()->get_string('email:user:suspend:subject',
                 'tool_usersuspension', $a, $user->lang);
@@ -626,6 +627,7 @@ class util {
         $a->suspendinterval = static::format_timespan(config::get('smartdetect_suspendafter'));
         $a->warningperiod = static::format_timespan(config::get('smartdetect_warninginterval'));
         $a->contact = $from->email;
+        $a->username = $user->username;
         $a->signature = fullname($from);
         $subject = get_string('email:user:warning:subject', 'tool_usersuspension', $a);
         $messagehtml = get_string('email:user:warning:body', 'tool_usersuspension', $a);
@@ -649,6 +651,7 @@ class util {
         $a = new \stdClass();
         $a->name = fullname($user);
         $a->contact = $from->email;
+        $a->username = $user->username;
         $a->signature = fullname($from);
         $subject = get_string_manager()->get_string('email:user:unsuspend:subject',
                 'tool_usersuspension', $a, $user->lang);
@@ -674,6 +677,7 @@ class util {
         $a->name = fullname($user);
         $a->timesuspended = static::format_timespan(config::get('cleanup_deleteafter'));
         $a->contact = $from->email;
+        $a->username = $user->username;
         $a->signature = fullname($from);
         $subject = get_string_manager()->get_string('email:user:delete:subject',
                 'tool_usersuspension', $a, $user->lang);
