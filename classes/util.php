@@ -466,6 +466,7 @@ class util {
      */
     public static function get_suspension_query($pastsuspensiondate = true, $customtime = null) {
         global $CFG;
+        $excludeddomains = static::get_excluded_domains_for_sql_not_in();
         $uniqid = static::get_prefix();
         $detectoperator = $pastsuspensiondate ? '<' : '>';
         $timecheck = !empty($customtime) ? $customtime : time() - (config::get('smartdetect_suspendafter'));
@@ -476,6 +477,9 @@ class util {
         $where .= " OR (u.auth = 'manual' AND u.firstaccess = 0 AND u.lastaccess = 0 ";
         $where .= "     AND u.timemodified > 0 AND u.timemodified $detectoperator :{$uniqid}time3)";
         $where .= ")";
+        if (!empty($excludeddomains)) {
+            $where .= ' AND ' . $excludeddomains;
+        }
         $params = ["{$uniqid}mnethost" => $CFG->mnet_localhost_id,
             "{$uniqid}time1" => $timecheck,
             "{$uniqid}time2" => $timecheck,
@@ -498,6 +502,7 @@ class util {
      */
     public static function get_deletion_query($pastdeletiondate = true) {
         global $CFG;
+        $excludeddomains = static::get_excluded_domains_for_sql_not_in();
         $detectoperator = $pastdeletiondate ? '<' : '>';
         $uniqid = static::get_prefix();
         $params = [
@@ -506,6 +511,9 @@ class util {
         ];
         $where = "u.suspended = 1 AND u.confirmed = 1 AND u.deleted = 0 "
                 . "AND u.mnethostid = :{$uniqid}mnethost AND u.timemodified $detectoperator :{$uniqid}";
+        if (!empty($excludeddomains)) {
+            $where .= ' AND ' . $excludeddomains;
+        }
         static::append_user_exclusion($where, $params, 'u.');
         return [$where, $params];
     }
