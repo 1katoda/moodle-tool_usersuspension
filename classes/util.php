@@ -948,6 +948,8 @@ class util {
      * Fech variables for message type.
      *
      * @param string $msgtype - suspend/unsuspend/delete/warning
+     * @param bool $wraphtml wrap in html table? (used for display)
+     * @return string|array
      */
     public static function get_variables_for_msg($msgtype, $wraphtml = false) {
         $rs = [];
@@ -1006,6 +1008,7 @@ class util {
      *
      * @param string $tplcontent
      * @param \stdClass|array $a
+     * @param string $language
      * @return string
      */
     public static function format_message($tplcontent, $a, $language) {
@@ -1034,6 +1037,7 @@ class util {
      *
      * @param string $msgtype
      * @param stdClass|array $vars
+     * @param string $language
      * @return string
      */
     public static function get_message_body($msgtype, $vars, $language) {

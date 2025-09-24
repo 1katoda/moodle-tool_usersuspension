@@ -199,7 +199,7 @@ class statustable_filtering extends user_filtering {
      * except for the fact we customize the session storage identifier.
      *
      * @param string $extra sql
-     * @param array $params named params (recommended prefix ex)
+     * @param array|null $params named params (recommended prefix ex)
      * @return array sql string and $params
      */
     public function get_sql_filter($extra = '', ?array $params = null) {
