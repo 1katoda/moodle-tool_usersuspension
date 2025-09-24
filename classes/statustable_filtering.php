@@ -100,7 +100,7 @@ class statustable_filtering extends user_filtering {
             ];
         }
 
-        $this->_fields  = [];
+        $this->_fields = [];
 
         foreach ($fieldnames as $fieldname => $advanced) {
             if ($field = $this->get_field($fieldname, $advanced)) {
@@ -134,7 +134,6 @@ class statustable_filtering extends user_filtering {
         if ($adddata = $this->_activeform->get_data()) {
             if (!empty($adddata->removeall)) {
                 $SESSION->{$filterid} = [];
-
             } else if (!empty($adddata->removeselected) && !empty($adddata->filter)) {
                 foreach ($adddata->filter as $fname => $instances) {
                     foreach ($instances as $i => $val) {
@@ -168,7 +167,7 @@ class statustable_filtering extends user_filtering {
         switch ($DB->get_dbfamily()) {
             case 'mssql':
                 $sqlpartgreatest = 'IIF(u.lastaccess >= u.firstaccess, ' .
-                    'IIF(u.timemodified >= u.lastaccess, u.timemodified, u.lastaccess), u.firstaccess)';
+                        'IIF(u.timemodified >= u.lastaccess, u.timemodified, u.lastaccess), u.firstaccess)';
                 break;
             default:
                 $sqlpartgreatest = 'GREATEST(u.firstaccess, u.lastaccess, u.timemodified)';
@@ -179,13 +178,13 @@ class statustable_filtering extends user_filtering {
             case 'suspendon':
                 // Mimic the field as SQL, because it's NOT a real field.
                 $field = '(' . $sqlpartgreatest . ' + ' .
-                    config::get('smartdetect_suspendafter') . ')';
+                        config::get('smartdetect_suspendafter') . ')';
                 return new \user_filter_date('suspendon', get_string('suspendon', 'tool_usersuspension'),
                         $advanced, $field);
             case 'deleteon':
                 // Mimic the field as SQL, because it's NOT a real field.
                 $field = '(' . $sqlpartgreatest . ' + ' .
-                    config::get('cleanup_deleteafter') . ')';
+                        config::get('cleanup_deleteafter') . ')';
                 return new \user_filter_date('deleteon', get_string('deleteon', 'tool_usersuspension'),
                         $advanced, $field);
             default:
@@ -203,7 +202,7 @@ class statustable_filtering extends user_filtering {
      * @param array $params named params (recommended prefix ex)
      * @return array sql string and $params
      */
-    public function get_sql_filter($extra='', array $params=null) {
+    public function get_sql_filter($extra = '', ?array $params = null) {
         global $SESSION;
         $filterid = $this->get_filter_id();
 
@@ -211,7 +210,7 @@ class statustable_filtering extends user_filtering {
         if ($extra != '') {
             $sqls[] = $extra;
         }
-        $params = (array)$params;
+        $params = (array) $params;
 
         if (!empty($SESSION->{$filterid})) {
             foreach ($SESSION->{$filterid} as $fname => $datas) {
@@ -234,7 +233,6 @@ class statustable_filtering extends user_filtering {
             return [$sqls, $params];
         }
     }
-
 }
 
 /**
@@ -259,8 +257,8 @@ class active_filter_form extends moodleform {
     public function definition() {
         global $SESSION;
 
-        $mform       =& $this->_form;
-        $fields      = $this->_customdata['fields'];
+        $mform = & $this->_form;
+        $fields = $this->_customdata['fields'];
         $extraparams = $this->_customdata['extraparams'];
         $filterid = $this->_customdata['filterid'];
 
@@ -275,7 +273,7 @@ class active_filter_form extends moodleform {
                 $field = $fields[$fname];
                 foreach ($datas as $i => $data) {
                     $description = $field->get_label($data);
-                    $mform->addElement('checkbox', 'filter['.$fname.']['.$i.']', null, $description);
+                    $mform->addElement('checkbox', 'filter[' . $fname . '][' . $i . ']', null, $description);
                 }
             }
 
@@ -292,5 +290,4 @@ class active_filter_form extends moodleform {
             $mform->addElement('group', 'actfiltergrp', '', $objs, ' ', false);
         }
     }
-
 }

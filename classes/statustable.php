@@ -47,14 +47,17 @@ class statustable extends \table_sql {
      * table type identifier for suspended users
      */
     const SUSPENDED = 'suspended';
+
     /**
      * table type identifier for users to suspend
      */
     const TOSUSPEND = 'tosuspend';
+
     /**
      * table type identifier for generic status
      */
     const STATUS = 'status';
+
     /**
      * table type identifier for users to delete
      */
@@ -109,7 +112,7 @@ class statustable extends \table_sql {
      */
     public function __construct($type = 'status') {
         global $USER;
-        parent::__construct(__CLASS__. '-' . $USER->id . '-' . $type);
+        parent::__construct(__CLASS__ . '-' . $USER->id . '-' . $type);
         $this->displaytype = $type;
         $this->strsuspend = get_string('suspenduser', 'admin');
         $this->strunsuspend = get_string('unsuspenduser', 'admin');
@@ -154,7 +157,7 @@ class statustable extends \table_sql {
      * @param array $params
      * @throws exception
      */
-    public function set_sql($fields, $from, $where, array $params = null) {
+    public function set_sql($fields, $from, $where, ?array $params = null) {
         // We'll disable this method.
         throw new exception('err:statustable:set_sql');
     }
@@ -221,7 +224,7 @@ class statustable extends \table_sql {
         // And apply filter(s).
         list($fsqls, $fparams) = $this->userfiltering->get_sql_filter();
         if (!empty($fsqls)) {
-            $where .= 'AND '. $fsqls;
+            $where .= 'AND ' . $fsqls;
             $params = $params + $fparams;
         }
 
@@ -263,7 +266,7 @@ class statustable extends \table_sql {
         // And apply filter(s).
         list($fsqls, $fparams) = $this->userfiltering->get_sql_filter();
         if (!empty($fsqls)) {
-            $where .= 'AND '. $fsqls;
+            $where .= 'AND ' . $fsqls;
             $params = $params + $fparams;
         }
 
@@ -300,22 +303,22 @@ class statustable extends \table_sql {
         switch ($DB->get_dbfamily()) {
             case 'mssql':
                 $sqlpartgreatest = 'IIF(u.lastaccess >= u.firstaccess, ' .
-                    'IIF(u.timemodified >= u.lastaccess, u.timemodified, u.lastaccess), u.firstaccess)';
+                        'IIF(u.timemodified >= u.lastaccess, u.timemodified, u.lastaccess), u.firstaccess)';
                 break;
             default:
                 $sqlpartgreatest = 'GREATEST(u.firstaccess, u.lastaccess, u.timemodified)';
                 break;
         }
 
-        $suspendinsql = '('.config::get('smartdetect_suspendafter') .
-                ' - (:now - '.$sqlpartgreatest.')) AS suspendin,';
+        $suspendinsql = '(' . config::get('smartdetect_suspendafter') .
+                ' - (:now - ' . $sqlpartgreatest . ')) AS suspendin,';
         $suspendonsql = '(' . $sqlpartgreatest . ' + ' .
                 config::get('smartdetect_suspendafter') . ') as suspendon,';
         $fields = 'u.id,u.username,u.email,' . $DB->sql_fullname('u.firstname', 'u.lastname') .
                 ' AS name,u.lastlogin,u.firstaccess,u.lastaccess,u.timemodified,u.suspended,u.deleted,' .
-                $sqlpartgreatest . ' AS timedetect,'.
-                $suspendinsql.
-                $suspendonsql.
+                $sqlpartgreatest . ' AS timedetect,' .
+                $suspendinsql .
+                $suspendonsql .
                 'NULL as action';
 
         list($where, $params) = util::get_suspension_query(false);
@@ -326,7 +329,7 @@ class statustable extends \table_sql {
         // And apply filter(s).
         list($fsqls, $fparams) = $this->userfiltering->get_sql_filter();
         if (!empty($fsqls)) {
-            $where .= ' AND '. $fsqls;
+            $where .= ' AND ' . $fsqls;
             $params = $params + $fparams;
         }
 
@@ -363,22 +366,22 @@ class statustable extends \table_sql {
         switch ($DB->get_dbfamily()) {
             case 'mssql':
                 $sqlpartgreatest = 'IIF(u.lastaccess >= u.firstaccess, ' .
-                    'IIF(u.timemodified >= u.lastaccess, u.timemodified, u.lastaccess), u.firstaccess)';
+                        'IIF(u.timemodified >= u.lastaccess, u.timemodified, u.lastaccess), u.firstaccess)';
                 break;
             default:
                 $sqlpartgreatest = 'GREATEST(u.firstaccess, u.lastaccess, u.timemodified)';
                 break;
         }
 
-        $deleteinsql = '('.config::get('cleanup_deleteafter') .
+        $deleteinsql = '(' . config::get('cleanup_deleteafter') .
                 ' - (:now - u.timemodified)) AS deletein,';
         $deleteonsql = '(' . $sqlpartgreatest . ' + ' .
                 config::get('cleanup_deleteafter') . ') as deleteon,';
         $fields = 'u.id,u.username,u.email,' . $DB->sql_fullname('u.firstname', 'u.lastname') .
-                ' AS name,u.lastlogin,u.firstaccess,u.lastaccess,u.timemodified,u.suspended,u.deleted,'.
-                $sqlpartgreatest . ' AS timedetect,'.
-                $deleteinsql.
-                $deleteonsql.
+                ' AS name,u.lastlogin,u.firstaccess,u.lastaccess,u.timemodified,u.suspended,u.deleted,' .
+                $sqlpartgreatest . ' AS timedetect,' .
+                $deleteinsql .
+                $deleteonsql .
                 'NULL as action';
 
         list($where, $params) = util::get_deletion_query(false);
@@ -389,7 +392,7 @@ class statustable extends \table_sql {
         // And apply filter(s).
         list($fsqls, $fparams) = $this->userfiltering->get_sql_filter();
         if (!empty($fsqls)) {
-            $where .= ' AND '. $fsqls;
+            $where .= ' AND ' . $fsqls;
             $params = $params + $fparams;
         }
 
@@ -454,7 +457,7 @@ class statustable extends \table_sql {
      * @return string actions
      */
     public function col_suspendin($row) {
-        return util::format_timespan($row->suspendin).'<br/>('.userdate($row->suspendon).')';
+        return util::format_timespan($row->suspendin) . '<br/>(' . userdate($row->suspendon) . ')';
     }
 
     /**
@@ -464,7 +467,7 @@ class statustable extends \table_sql {
      * @return string actions
      */
     public function col_deletein($row) {
-        return util::format_timespan($row->deletein).'<br/>('.userdate($row->deleteon).')';
+        return util::format_timespan($row->deletein) . '<br/>(' . userdate($row->deleteon) . ')';
     }
 
     /**
@@ -522,7 +525,7 @@ class statustable extends \table_sql {
     protected function get_action($row, $action) {
         $actionstr = 'str' . $action;
         return '<a href="' . new \moodle_url($this->baseurl, ['action' => $action,
-            'id' => $row->id, 'sesskey' => sesskey(), 'type' => $this->displaytype]) .
+                    'id' => $row->id, 'sesskey' => sesskey(), 'type' => $this->displaytype]) .
                 '" alt="' . $this->{$actionstr} .
                 '">' . $this->get_action_image($action) . '</a>';
     }
@@ -537,5 +540,4 @@ class statustable extends \table_sql {
     protected function add_exclude_users(&$where, &$params) {
         util::append_user_exclusion($where, $params, 'u.');
     }
-
 }

@@ -1,3 +1,12 @@
+Version 4.0.4 (build 2025090100)
+* integrated changes from https://github.com/sebsoftnl/moodle-tool_usersuspension/pull/14
+  Thanks, 1katoda (https://github.com/1katoda)
+* integrated changes from https://github.com/sebsoftnl/moodle-tool_usersuspension/pull/15
+  Thanks Melvyn Gómez (https://github.com/melvyng)
+* Closes #16 (FR: UI-Based Customization of Email Templates for All Notifications in User Suspension Plugin)
+
+----------
+
 Version 4.0.2 (build 2024090100)
 * integrated changes from https://github.com/sebsoftnl/moodle-tool_usersuspension/pull/7
   Thanks, Gemma (https://github.com/gemguardian)
@@ -5,6 +14,8 @@ Version 4.0.2 (build 2024090100)
   Thanks Nejc / AttackVectorDelta
 * integrated changes from https://github.com/sebsoftnl/moodle-tool_usersuspension/pull/13
   Thanks Melvyn Gómez (https://github.com/melvyng)
+
+----------
 
 Version 4.0.1 (build 2022090102)
 * Fix for set_config from projectbadger: Fixes lastrun config and smart detection.

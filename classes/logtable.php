@@ -95,7 +95,7 @@ class logtable extends \table_sql {
      * @param array $params
      * @throws exception
      */
-    public function set_sql($fields, $from, $where, array $params = null) {
+    public function set_sql($fields, $from, $where, ?array $params = null) {
         // We'll disable this method.
         throw new exception('err:statustable:set_sql');
     }
